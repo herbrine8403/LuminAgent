@@ -217,8 +217,8 @@ native:
 # 资源编译：仅编 catalog，无 storyboard
 assets: native
 	echo '[LuminAgent v$(VERSION)] assets - start'
-	$(call METHOD_DIRCHECK,$(SOURCEDIR)/resources)
-	xcrun actool $(SOURCEDIR)/Resources/Assets.xcassets --compile $(SOURCEDIR)/resources --platform iphoneos --minimum-deployment-target 15.0
+	$(call METHOD_DIRCHECK,$(SOURCEDIR)/build-resources)
+	xcrun actool $(SOURCEDIR)/Resources/Assets.xcassets --compile $(SOURCEDIR)/build-resources --platform iphoneos --minimum-deployment-target 15.0
 	echo '[LuminAgent v$(VERSION)] assets - end'
 
 # 组装 .app：clang 链接 Core 静态库 + 系统库，ldid 打标，组装 Payload
@@ -229,11 +229,11 @@ payload: native assets
 	mkdir -p $(LUMIN_BUNDLE_DIR)
 	cp $(LUMIN_EXECUTABLE) $(LUMIN_BUNDLE_DIR)/$(APP_NAME)
 	cp $(SOURCEDIR)/Natives/Info.plist $(LUMIN_BUNDLE_DIR)/Info.plist
-	if [ ! -f '$(SOURCEDIR)/resources/Assets.car' ]; then \
+	if [ ! -f '$(SOURCEDIR)/build-resources/Assets.car' ]; then \
 		echo 'assets 产物缺失：resources/Assets.car 不存在，拒绝组包' >&2; \
 		exit 1; \
 	fi
-	cp -R $(SOURCEDIR)/resources/* $(LUMIN_BUNDLE_DIR)/
+	cp -R $(SOURCEDIR)/build-resources/* $(LUMIN_BUNDLE_DIR)/
 	cp -R $(SOURCEDIR)/Resources/*.lproj $(LUMIN_BUNDLE_DIR)/ 2>/dev/null || true
 	if [ '$(TROLLSTORE_JIT_ENT)' == '1' ]; then \
 		ldid -S$(SOURCEDIR)/entitlements.trollstore.xml $(LUMIN_BUNDLE_DIR)/$(APP_NAME); \
@@ -284,7 +284,7 @@ codesign:
 
 clean:
 	echo '[LuminAgent v$(VERSION)] clean - start'
-	rm -rf $(WORKINGDIR)/* $(OUTPUTDIR)/Payload $(OUTPUTDIR)/*.ipa $(OUTPUTDIR)/*.tipa $(OUTPUTDIR)/*.dSYM $(OUTPUTDIR)/$(APP_NAME).app $(SOURCEDIR)/Payload $(SOURCEDIR)/resources
+	rm -rf $(WORKINGDIR)/* $(OUTPUTDIR)/Payload $(OUTPUTDIR)/*.ipa $(OUTPUTDIR)/*.tipa $(OUTPUTDIR)/*.dSYM $(OUTPUTDIR)/$(APP_NAME).app $(SOURCEDIR)/Payload $(SOURCEDIR)/build-resources
 	echo '[LuminAgent v$(VERSION)] clean - end'
 
 .PHONY: all help check native assets payload package dsym deploy codesign clean
