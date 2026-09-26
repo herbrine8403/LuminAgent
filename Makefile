@@ -218,7 +218,9 @@ native:
 assets: native
 	echo '[LuminAgent v$(VERSION)] assets - start'
 	$(call METHOD_DIRCHECK,$(SOURCEDIR)/build-resources)
-	xcrun actool $(SOURCEDIR)/Resources/Assets.xcassets --compile $(SOURCEDIR)/build-resources --platform iphoneos --minimum-deployment-target 15.0
+	find $(SOURCEDIR)/Resources/Assets.xcassets -type f | sort
+	xcrun actool $(SOURCEDIR)/Resources/Assets.xcassets --compile $(SOURCEDIR)/build-resources --platform iphoneos --minimum-deployment-target 15.0 --app-icon AppIcon --output-format human-readable-text --errors --warnings --notices
+	ls -la $(SOURCEDIR)/build-resources
 	echo '[LuminAgent v$(VERSION)] assets - end'
 
 # 组装 .app：clang 链接 Core 静态库 + 系统库，ldid 打标，组装 Payload
@@ -230,7 +232,7 @@ payload: native assets
 	cp $(LUMIN_EXECUTABLE) $(LUMIN_BUNDLE_DIR)/$(APP_NAME)
 	cp $(SOURCEDIR)/Natives/Info.plist $(LUMIN_BUNDLE_DIR)/Info.plist
 	if [ ! -f '$(SOURCEDIR)/build-resources/Assets.car' ]; then \
-		echo 'assets 产物缺失：resources/Assets.car 不存在，拒绝组包' >&2; \
+		echo 'assets 产物缺失：build-resources/Assets.car 不存在，拒绝组包' >&2; \
 		exit 1; \
 	fi
 	cp -R $(SOURCEDIR)/build-resources/* $(LUMIN_BUNDLE_DIR)/
