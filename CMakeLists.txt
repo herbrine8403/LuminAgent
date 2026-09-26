@@ -146,6 +146,8 @@ target_link_libraries(LuminAgent PRIVATE
   "-framework Foundation"
   "-framework Security"
   "-framework Network"
+  "-framework CoreGraphics"
+  "-framework QuartzCore"
   "sqlite3"
 )
 # rpath 指向 @executable_path/Frameworks，Info.plist 绑定到产物
