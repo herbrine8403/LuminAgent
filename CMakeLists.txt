@@ -21,6 +21,9 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_OBJC_STANDARD 11)
 
+# 全仓 ARC：全部 .m 按 ARC 编写（weak delegate、__bridge_transfer），禁止 MRC
+add_compile_options($<$<COMPILE_LANGUAGE:OBJC>:-fobjc-arc>)
+
 # config.h.in -> config.h（版本/分支/commit 经 -D 注入，避免 Make 展开破坏密钥）
 set(CONFIG_BRANCH "unknown" CACHE STRING "构建分支名")
 set(CONFIG_COMMIT "unknown" CACHE STRING "构建提交号")
