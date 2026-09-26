@@ -80,7 +80,7 @@ static NSError *LAErrorMake(LALoopErrorCode code, NSString *desc) {
     // 骨架：记录 turn/step 起止 + request 上下文，真实 prompt→tools→verify
     // 由 Provider/Tools 组回调驱动；此处保证 steps 上限与轨迹完整。
     [context.trajectory appendEventOfType:LATrajectoryEventTurnStart payload:@{@"preset": context.presetID ?: @"", @"budget": @(budget)} sourcePlugin:self.loopPluginID sessionID:context.sessionID];
-    [context.trajectory appendEventOfType:LATrajectoryEventRequestContext payload:@{@"model": context.modelIdentifier ?: @"", @"prompt": context.taskPrompt ?: @""} sourcePlugin:self.loopPluginID sessionID:context.sessionID];
+    [context.trajectory appendEventOfType:LATrajectoryEventRequestCtx payload:@{@"model": context.modelIdentifier ?: @"", @"prompt": context.taskPrompt ?: @""} sourcePlugin:self.loopPluginID sessionID:context.sessionID];
     [context.trajectory appendEventOfType:LATrajectoryEventStepStart payload:@{@"step": @1, @"phase": @"prompt"} sourcePlugin:self.loopPluginID sessionID:context.sessionID];
     // verify 环节占位：上限内即视为通过（真实校验由 Tools 结果回填）。
     [context.trajectory appendEventOfType:LATrajectoryEventStepEnd payload:@{@"step": @1, @"phase": @"verify", @"ok": @YES} sourcePlugin:self.loopPluginID sessionID:context.sessionID];
