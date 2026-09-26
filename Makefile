@@ -226,16 +226,20 @@ payload: native assets
 	echo '[LuminAgent v$(VERSION)] payload - start'
 	$(call METHOD_DIRCHECK,$(OUTPUTDIR)/Payload)
 	rm -rf $(LUMIN_BUNDLE_DIR)
-	mkdir -p $(LUMIN_BUNDLE_DIR)/Frameworks
+	mkdir -p $(LUMIN_BUNDLE_DIR)
 	cp $(LUMIN_EXECUTABLE) $(LUMIN_BUNDLE_DIR)/$(APP_NAME)
 	cp $(SOURCEDIR)/Natives/Info.plist $(LUMIN_BUNDLE_DIR)/Info.plist
-	cp -R $(SOURCEDIR)/resources/* $(LUMIN_BUNDLE_DIR)/ 2>/dev/null || true
+	if [ ! -f '$(SOURCEDIR)/resources/Assets.car' ]; then \
+		echo 'assets 产物缺失：resources/Assets.car 不存在，拒绝组包' >&2; \
+		exit 1; \
+	fi
+	cp -R $(SOURCEDIR)/resources/* $(LUMIN_BUNDLE_DIR)/
+	cp -R $(SOURCEDIR)/Resources/*.lproj $(LUMIN_BUNDLE_DIR)/ 2>/dev/null || true
 	if [ '$(TROLLSTORE_JIT_ENT)' == '1' ]; then \
 		ldid -S$(SOURCEDIR)/entitlements.trollstore.xml $(LUMIN_BUNDLE_DIR)/$(APP_NAME); \
 	else \
 		ldid -S$(SOURCEDIR)/entitlements.sideload.xml $(LUMIN_BUNDLE_DIR)/$(APP_NAME); \
 	fi
-	$(call METHOD_MACHO,$(LUMIN_BUNDLE_DIR)/Frameworks,dummy=1; vtool -arch arm64 -set-build-version $(PLATFORM) 15.0 16.0 -replace -output $$file $$file 2>/dev/null || true)
 	mkdir -p $(SOURCEDIR)/Payload
 	rm -rf $(SOURCEDIR)/Payload/*
 	cp -R $(LUMIN_BUNDLE_DIR) $(SOURCEDIR)/Payload/

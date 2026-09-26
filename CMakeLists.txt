@@ -51,17 +51,9 @@ set_target_properties(AirCore PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 
-# 可选 SHARED 插件位（多 SHARED 结构，后续 Phase B/C 填充实现）
-add_library(AirProviderGateway SHARED Natives/Core/AirPluginStub.c)
-add_library(AirToolRuntime SHARED Natives/Core/AirPluginStub.c)
-set_target_properties(AirProviderGateway AirToolRuntime PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-  BUILD_WITH_INSTALL_RPATH TRUE
-  INSTALL_RPATH "@executable_path/Frameworks"
-  BUILD_WITH_INSTALL_NAME_DIR TRUE
-  INSTALL_NAME_DIR "@rpath"
-)
+# 说明：不设 SHARED 插件位——全部业务代码直接编入主可执行文件与 AirCore，
+# 避免产出无人链接、无人打包的空 dylib（曾因此导致 Frameworks 空目录进包）。
+# 未来如有真动态库需求，再按“可执行直链 + payload 拷入 Frameworks”成套加回。
 
 # 主可执行文件：单 executable（入口 Natives/main.m，经 AppDelegate/SceneDelegate/EngineLauncher 启动）
 # 收敛 A：Natives 各组全部 .m 显式列入（Session/Provider/Tools/Skills/MCP/Harness/DesignSystem/UI），
