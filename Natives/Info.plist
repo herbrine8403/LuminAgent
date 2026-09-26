@@ -8,6 +8,8 @@
 	<string>LuminAgent</string>
 	<key>CFBundleExecutable</key>
 	<string>LuminAgent</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.luminagent.ios</string>
 	<key>CFBundleInfoDictionaryVersion</key>

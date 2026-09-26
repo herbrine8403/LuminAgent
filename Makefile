@@ -219,7 +219,7 @@ assets: native
 	echo '[LuminAgent v$(VERSION)] assets - start'
 	$(call METHOD_DIRCHECK,$(SOURCEDIR)/build-resources)
 	find $(SOURCEDIR)/Resources/Assets.xcassets -type f | sort
-	xcrun actool $(SOURCEDIR)/Resources/Assets.xcassets --compile $(SOURCEDIR)/build-resources --platform iphoneos --minimum-deployment-target 15.0 --app-icon AppIcon --output-format human-readable-text --errors --warnings --notices
+	xcrun actool $(SOURCEDIR)/Resources/Assets.xcassets --compile $(SOURCEDIR)/build-resources --platform iphoneos --minimum-deployment-target 15.0 --app-icon AppIcon --output-partial-info-plist $(SOURCEDIR)/build-resources/AssetInfo.plist --output-format human-readable-text --errors --warnings --notices
 	ls -la $(SOURCEDIR)/build-resources
 	echo '[LuminAgent v$(VERSION)] assets - end'
 
