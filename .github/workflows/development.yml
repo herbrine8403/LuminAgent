@@ -37,8 +37,11 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
           xcodebuild -version || true
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Guard no xcodeproj
-        run: bash LuminAgent/scripts/check-no-xcodeproj.sh
+        run: bash scripts/check-no-xcodeproj.sh
         working-directory: ${{ github.workspace }}
 
       - name: Install GNU Make
@@ -54,12 +57,9 @@ jobs:
         run: |
           brew install ldid || true
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Checkout repository submodules
         run: git submodule update --init --recursive || true
-        working-directory: ${{ github.workspace }}/LuminAgent
+        working-directory: ${{ github.workspace }}
 
       # 注意：不要在 `if:` 条件里引用 secrets / vars。
       # 判断逻辑一律放进 shell，密钥经 env 注入。
@@ -68,7 +68,7 @@ jobs:
           IPHONEOS_DEPLOYMENT_TARGET: 15.0
           LUMIN_SIGN_IDENTITY: ${{ secrets.LUMIN_SIGN_IDENTITY }}
           LUMIN_PROVISIONING_UUID: ${{ secrets.LUMIN_PROVISIONING_UUID }}
-        working-directory: ${{ github.workspace }}/LuminAgent
+        working-directory: ${{ github.workspace }}
         run: |
           set -o pipefail
           export PATH=/opt/homebrew/bin:$PATH
@@ -78,7 +78,6 @@ jobs:
             gmake -j"$(sysctl -n hw.ncpu)" dsym package PLATFORM=${{ matrix.platform }} TROLLSTORE_JIT_ENT=1
           else
             gmake -j"$(sysctl -n hw.ncpu)" dsym package PLATFORM=${{ matrix.platform }}
-            gmake -j"$(sysctl -n hw.ncpu)" package PLATFORM=${{ matrix.platform }}
           fi
 
       - name: Upload regular ipa
@@ -86,18 +85,18 @@ jobs:
         if: success()
         with:
           name: com.luminagent.ios-${{ matrix.platform_name }}.ipa
-          path: LuminAgent/artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa
+          path: artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa
 
       - name: Upload regular tipa
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: com.luminagent.ios-${{ matrix.platform_name }}-trollstore.tipa
-          path: LuminAgent/artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa
+          path: artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa
 
       - name: Upload LuminAgent.dSYM
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: LuminAgent-${{ matrix.platform_name }}.dSYM
-          path: LuminAgent/artifacts/LuminAgent.dSYM
+          path: artifacts/LuminAgent.dSYM
