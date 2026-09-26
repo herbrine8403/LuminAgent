@@ -150,12 +150,12 @@ target_link_libraries(LuminAgent PRIVATE
   "-framework QuartzCore"
   "sqlite3"
 )
-# rpath 指向 @executable_path/Frameworks，Info.plist 绑定到产物
+# rpath 指向 @executable_path/Frameworks。
+# 注意：刻意不用 MACOSX_BUNDLE——payload 由 Makefile 手工组装 .app（含 Info.plist/ldid），
+# CMake 只产裸可执行文件到 ${CMAKE_BINARY_DIR}/LuminAgent。
 set_target_properties(LuminAgent PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
   BUILD_WITH_INSTALL_RPATH TRUE
   INSTALL_RPATH "@executable_path/Frameworks"
-  MACOSX_BUNDLE TRUE
-  MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Natives/Info.plist"
   XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED "NO"
 )
