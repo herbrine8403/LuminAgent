@@ -88,7 +88,7 @@ jobs:
         run: |
           TAG="nightly-${{ github.ref_name }}"
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --prerelease --title "Nightly ${{ github.ref_name }}" --notes "CI 自动构建（每次覆盖，仅留最新）"
-          cp artifacts/LuminAgent.dSYM "artifacts/LuminAgent-${{ matrix.platform_name }}.dSYM"
+          cp -R artifacts/LuminAgent.dSYM "artifacts/LuminAgent-${{ matrix.platform_name }}.dSYM"
           files=(artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa "artifacts/LuminAgent-${{ matrix.platform_name }}.dSYM")
           for t in artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa; do
             [ -e "$t" ] && files+=("$t")
