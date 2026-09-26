@@ -131,7 +131,7 @@ NSString * const LALSPErrorDomain = @"org.luminagent.lsp";
     NSInteger lineNo = 0;
     for (NSString *line in lines) {
         lineNo++;
-        NSString *code = [self stripLiteralsAndLineComment:line inBlock:&inBlock];
+        NSString *code = [self stripLiteralsAndLineComment:line inBlockComment:&inBlock];
         for (NSUInteger i = 0; i < code.length; i++) {
             unichar c = [code characterAtIndex:i];
             NSString *ch = [NSString stringWithFormat:@"%C", c];
