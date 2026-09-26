@@ -1,5 +1,6 @@
 #import "LACreator.h"
 #import "LATrajectoryStore.h"
+#import "LAPermissionAsking.h"
 
 NSString *const LACreatorErrorDomain = @"com.luminagent.harness.creator";
 
@@ -93,29 +94,19 @@ NSString *const LACreatorErrorDomain = @"com.luminagent.harness.creator";
 - (void)requestSignoffForDraft:(LACreatorDraft *)draft
                          asker:(id)asker
                     completion:(void (^)(BOOL, NSError * _Nullable))completion {
-    // 签核硬门：asker 为空或无 ask 能力即失败，不自动放行。
-    // asker 须响应 askPermission:（LAPermissionAsking 契约，前向声明，不导入他组头）。
-    SEL askSel = NSSelectorFromString(@"askPermission:");
-    if (!asker || ![asker respondsToSelector:askSel]) {
+    // 签核硬门：asker 为空或不支持问询契约即失败，不自动放行。
+    if (!asker || ![asker conformsToProtocol:@protocol(LAPermissionAsking)]) {
         if (completion) completion(NO, [NSError errorWithDomain:LACreatorErrorDomain code:LACreatorErrorNeedSignoff userInfo:@{NSLocalizedDescriptionKey: @"签核器不可用，拒绝安装（先签核再安装）"}]);
         return;
     }
-    // ask 参数为权限请求体（由 Tools 组 LAPermissionRequest 定义，此处用字典转述避免重复定义类型）。
-    id request = nil;
-    Class reqCls = NSClassFromString(@"LAPermissionRequest");
-    SEL reqSel = NSSelectorFromString(@"requestWithTool:target:reason:");
-    if (reqCls && [reqCls respondsToSelector:reqSel]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        request = [reqCls performSelector:reqSel withObject:@"creator-install" withObject:draft.generatedManifestJSON withObject:@"Creator 请求安装新插件"];
-#pragma clang diagnostic pop
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    NSInteger decision = (NSInteger)[asker performSelector:askSel withObject:request];
-#pragma clang diagnostic pop
-    // 约定：LAPermissionDecisionAllow == 1 为通过（与 Tools 组枚举值对齐）。
-    BOOL approved = (decision == 1);
+    // ask 参数为权限请求体（Tools 组 LAPermissionRequest 唯一真源，直接调用）。
+    LAPermissionRequest *request =
+        [LAPermissionRequest requestWithTool:@"creator-install"
+                                      target:draft.generatedManifestJSON
+                                      reason:@"Creator 请求安装新插件"];
+    LAPermissionDecision decision = [(id<LAPermissionAsking>)asker askPermission:request];
+    // 约定：LAPermissionDecisionAllow 为通过（与 Tools 组枚举值对齐）。
+    BOOL approved = (decision == LAPermissionDecisionAllow);
     if (approved) draft.stage = LACreatorStageStaged;
     [self.trajectory appendEventOfType:LATrajectoryEventPluginExt payload:@{@"extKind": @"creator-signoff", @"approved": @(approved), @"draft": draft.draftID} sourcePlugin:@"loop-creator" sessionID:self.mutableSessionID];
     if (completion) completion(approved, nil);
