@@ -112,8 +112,8 @@
         NSString *token = [text substringWithRange:[m rangeAtIndex:1]];
         // 去掉行尾标点污染。
         while (token.length > 0 &&
-               [@",;:!?". rangeOfString:
-                [token substringFromIndex:token.length - 1]].location != NSNotFound) {
+                [@",;:!?" rangeOfString:
+                 [token substringFromIndex:token.length - 1]].location != NSNotFound) {
             token = [token substringToIndex:token.length - 1];
         }
         if (token.length > 0) { [out addObject:token]; }
