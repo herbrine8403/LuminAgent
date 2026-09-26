@@ -16,7 +16,7 @@
 - (void)sessionListDidTapCreate:(LASessionListVC *)list;
 @end
 
-@interface LASessionListVC : UIViewController
+@interface LASessionListVC : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, weak) id<LASessionListDelegate> delegate;
 

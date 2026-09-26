@@ -90,7 +90,7 @@
 
     /* Bento CompositionalLayout（禁用 FlowLayout 做主页） */
     UICollectionViewCompositionalLayout *layout =
-        [UICollectionViewCompositionalLayout layoutWithSectionProvider:
+        [[UICollectionViewCompositionalLayout alloc] initWithSectionProvider:
             ^NSCollectionLayoutSection *(NSInteger section, id<NSCollectionLayoutEnvironment> env) {
         return [self layoutSectionFor:section environment:env];
     }];
