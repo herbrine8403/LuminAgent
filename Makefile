@@ -198,7 +198,7 @@ check:
 native:
 	echo '[LuminAgent v$(VERSION)] native - start'
 	mkdir -p $(WORKINGDIR)
-	cd $(WORKINGDIR) && cmake \
+	cmake -S $(SOURCEDIR) -B $(WORKINGDIR) \
 		-DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
 		-DCMAKE_CROSSCOMPILING=true \
 		-DCMAKE_SYSTEM_NAME=Darwin \
@@ -210,8 +210,7 @@ native:
 		-DCMAKE_OBJC_FLAGS="-arch arm64 -miphoneos-version-min=15.0" \
 		-DCONFIG_BRANCH="$(BRANCH)" \
 		-DCONFIG_COMMIT="$(COMMIT)" \
-		-DCONFIG_RELEASE=$(RELEASE) \
-		..
+		-DCONFIG_RELEASE=$(RELEASE)
 	cmake --build $(WORKINGDIR) --config $(CMAKE_BUILD_TYPE) -j$(JOBS)
 	echo '[LuminAgent v$(VERSION)] native - end'
 
