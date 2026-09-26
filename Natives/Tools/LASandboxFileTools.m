@@ -295,7 +295,7 @@ static const NSUInteger kLASniffLength = 8000;
         if (error) { *error = [NSError errorWithDomain:LAFileToolsErrorDomain code:LAFileToolsErrorInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"glob pattern 为空。"}]; }
         return nil;
     }
-    NSString *base = [self standardizedPath:basePath ?: self.projectRoot ?: [[self class] sandboxRoots] firstObject];
+    NSString *base = [self standardizedPath:basePath ?: self.projectRoot ?: [[[self class] sandboxRoots] firstObject]];
     if (![self gatePath:base tool:@"glob" error:error]) { return nil; }
     NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:base];
     if (!enumerator) {
