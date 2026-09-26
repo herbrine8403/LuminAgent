@@ -86,6 +86,8 @@ jobs:
         with:
           name: com.luminagent.ios-${{ matrix.platform_name }}.ipa
           path: artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa
+          retention-days: 1
+          compression-level: 9
 
       - name: Upload regular tipa
         uses: actions/upload-artifact@v4
@@ -93,6 +95,8 @@ jobs:
         with:
           name: com.luminagent.ios-${{ matrix.platform_name }}-trollstore.tipa
           path: artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa
+          retention-days: 1
+          compression-level: 9
 
       - name: Upload LuminAgent.dSYM
         uses: actions/upload-artifact@v4
@@ -100,3 +104,5 @@ jobs:
         with:
           name: LuminAgent-${{ matrix.platform_name }}.dSYM
           path: artifacts/LuminAgent.dSYM
+          retention-days: 1
+          compression-level: 9
