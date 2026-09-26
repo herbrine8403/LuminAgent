@@ -80,18 +80,30 @@ jobs:
             gmake -j"$(sysctl -n hw.ncpu)" dsym package PLATFORM=${{ matrix.platform }}
           fi
 
-      # Actions artifact 配额为账号级共享且已满，大包改发 nightly Release（不占 artifact 配额）。
-      - name: Upload ipa/tipa/dSYM to nightly release
+      # 公开仓 artifact 存储免费：大包走 artifacts，保留 7 天。
+      - name: Upload regular ipa
+        uses: actions/upload-artifact@v4
         if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          TAG="nightly-${{ github.ref_name }}"
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --prerelease --title "Nightly ${{ github.ref_name }}" --notes "CI 自动构建（每次覆盖，仅留最新）"
-          cp -R artifacts/LuminAgent.dSYM "artifacts/LuminAgent-${{ matrix.platform_name }}.dSYM"
-          (cd artifacts && zip -ry -q "LuminAgent-${{ matrix.platform_name }}.dSYM.zip" "LuminAgent-${{ matrix.platform_name }}.dSYM")
-          files=(artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa "artifacts/LuminAgent-${{ matrix.platform_name }}.dSYM.zip")
-          for t in artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa; do
-            [ -e "$t" ] && files+=("$t")
-          done
-          gh release upload "$TAG" "${files[@]}" --clobber
+        with:
+          name: com.luminagent.ios-${{ matrix.platform_name }}.ipa
+          path: artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa
+          retention-days: 7
+          compression-level: 9
+
+      - name: Upload regular tipa
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: com.luminagent.ios-${{ matrix.platform_name }}-trollstore.tipa
+          path: artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa
+          retention-days: 7
+          compression-level: 9
+
+      - name: Upload LuminAgent.dSYM
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: LuminAgent-${{ matrix.platform_name }}.dSYM
+          path: artifacts/LuminAgent.dSYM
+          retention-days: 7
+          compression-level: 9
