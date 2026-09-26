@@ -1,0 +1,75 @@
+/* LuminAgent 中文本地化（zh-CN）：会话/权限/设置/MCP/错误全量文案。
+ * 关键术语中英对照，禁止放置真实密钥。 */
+
+/* 应用 */
+"app.name" = "LuminAgent";
+
+/* 会话（Session） */
+"session.title" = "会话";
+"session.empty" = "暂无会话";
+"session.create" = "新建会话";
+"session.filter" = "按模式筛选";
+"session.filter.all" = "全部";
+"session.filter.build" = "构建 Build";
+"session.filter.plan" = "规划 Plan";
+"session.guide.title" = "还没有会话，点右上角 + 开始吧";
+"session.guide.subtitle" = "Build 构建全工具执行，Plan 规划只读先行";
+"session.delete" = "删除会话";
+"session.fork" = "从此分叉 Fork";
+"session.revert" = "回滚到此 Revert";
+"session.export" = "导出会话 Export";
+"session.mode.build" = "构建 Build";
+"session.mode.plan" = "规划 Plan";
+
+/* 聊天（Chat） */
+"chat.input.placeholder" = "输入消息…";
+"chat.send" = "发送";
+"chat.abort" = "中断 Stop";
+"chat.tool.call" = "工具调用 Tool Call";
+"chat.tool.result" = "工具结果 Tool Result";
+
+/* 权限（Permission） */
+"permission.title" = "权限确认 Permission";
+"permission.allow" = "允许 Allow";
+"permission.deny" = "拒绝 Deny";
+"permission.ask" = "每次询问 Ask";
+"permission.doomloop" = "检测到重复调用，已暂停请确认";
+"permission.outside" = "超出沙盒范围，需要确认";
+
+/* 问卷（Question） */
+"question.title" = "需要你的选择";
+"question.cancel" = "取消";
+
+/* 轨迹（Trajectory） */
+"trajectory.title" = "轨迹审计 Trajectory";
+"trajectory.filter" = "按类型筛选";
+"trajectory.filter.all" = "全部";
+"trajectory.filter.tool" = "工具 Tool";
+"trajectory.filter.message" = "消息 Message";
+"trajectory.filter.system" = "系统 System";
+
+/* 设置（Settings） */
+"settings.title" = "设置";
+"settings.appearance" = "外观";
+"settings.animation" = "过渡动效 Transition";
+"settings.animation.desc" = "Close/JellyBounce/Bounce/SliceIn 四选一";
+"settings.wallpaper.dim" = "壁纸联动降亮";
+"settings.model" = "模型 Model";
+"settings.model.id" = "模型寻址 provider/model";
+"settings.mcp" = "MCP 服务";
+"settings.mcp.servers" = "MCP 服务器";
+"settings.mcp.desc" = "OAuth/多会话/用量统计";
+"settings.about" = "关于";
+"settings.version" = "版本 Version";
+
+/* 状态视图 */
+"state.loading" = "正在加载…";
+"state.retry" = "重试 Retry";
+"state.empty" = "暂无内容";
+
+/* 错误文案 */
+"error.load.sessions" = "会话加载失败，请检查存储后重试";
+"error.network" = "网络请求失败，请检查连接后重试";
+"error.unauthorized" = "授权失效（401），请重新登录";
+"error.permission.denied" = "权限被拒绝，操作已取消";
+"error.model.badidentifier" = "模型标识非法，需 provider/model 格式";

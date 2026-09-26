@@ -1,0 +1,21 @@
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>application-identifier</key>
+	<string>com.luminagent.ios</string>
+	<key>com.apple.private.security.container-required</key>
+	<string>com.luminagent.ios</string>
+	<key>get-task-allow</key>
+	<true/>
+	<key>com.apple.developer.kernel.extended-virtual-addressing</key>
+	<true/>
+	<key>com.apple.developer.kernel.increased-memory-limit</key>
+	<true/>
+	<!-- 允许自身修改 Jetsam 任务限额 -->
+	<key>com.apple.private.memorystatus</key>
+	<true/>
+	<!-- 经 TrollStore 安装仍为沙盒应用的标记 -->
+	<key>jb.pmap_cs.custom_trust</key>
+	<string>PMAP_CS_APP_STORE</string>
+</dict>
+</plist>

@@ -1,0 +1,103 @@
+name: Development build
+
+on:
+  pull_request:
+    branches-ignore:
+      - 'l10n_main'
+    types: [opened, reopened, synchronize]
+  push:
+    branches-ignore:
+      - 'l10n_main'
+  workflow_dispatch:
+
+# 并发控制：同分支/同 PR 的新推送取消旧构建，避免 macOS runner 堆队。
+concurrency:
+  group: dev-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Development build
+    strategy:
+      matrix:
+        include:
+          - platform: 2
+            platform_name: ios
+          - platform: 7
+            platform_name: iossimulator
+
+    runs-on: macos-14
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Select Xcode 15.4
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+          xcodebuild -version || true
+
+      - name: Guard no xcodeproj
+        run: bash LuminAgent/scripts/check-no-xcodeproj.sh
+        working-directory: ${{ github.workspace }}
+
+      - name: Install GNU Make
+        run: |
+          brew update
+          brew install make
+
+      - name: Install Java 8 (Temurin) via Homebrew
+        run: |
+          brew install --cask temurin@8 || true
+
+      - name: Install ldid
+        run: |
+          brew install ldid || true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout repository submodules
+        run: git submodule update --init --recursive || true
+        working-directory: ${{ github.workspace }}/LuminAgent
+
+      # 注意：不要在 `if:` 条件里引用 secrets / vars。
+      # 判断逻辑一律放进 shell，密钥经 env 注入。
+      - name: Build for ${{ matrix.platform_name }}
+        env:
+          IPHONEOS_DEPLOYMENT_TARGET: 15.0
+          LUMIN_SIGN_IDENTITY: ${{ secrets.LUMIN_SIGN_IDENTITY }}
+          LUMIN_PROVISIONING_UUID: ${{ secrets.LUMIN_PROVISIONING_UUID }}
+        working-directory: ${{ github.workspace }}/LuminAgent
+        run: |
+          set -o pipefail
+          export PATH=/opt/homebrew/bin:$PATH
+          export SLIMMED=0
+          if [ "${{ matrix.platform_name }}" = "ios" ]; then
+            gmake -j"$(sysctl -n hw.ncpu)" dsym package PLATFORM=${{ matrix.platform }}
+            gmake -j"$(sysctl -n hw.ncpu)" dsym package PLATFORM=${{ matrix.platform }} TROLLSTORE_JIT_ENT=1
+          else
+            gmake -j"$(sysctl -n hw.ncpu)" dsym package PLATFORM=${{ matrix.platform }}
+            gmake -j"$(sysctl -n hw.ncpu)" package PLATFORM=${{ matrix.platform }}
+          fi
+
+      - name: Upload regular ipa
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: com.luminagent.ios-${{ matrix.platform_name }}.ipa
+          path: LuminAgent/artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}.ipa
+
+      - name: Upload regular tipa
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: com.luminagent.ios-${{ matrix.platform_name }}-trollstore.tipa
+          path: LuminAgent/artifacts/com.luminagent.ios-*-${{ matrix.platform_name }}-trollstore.tipa
+
+      - name: Upload LuminAgent.dSYM
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: LuminAgent-${{ matrix.platform_name }}.dSYM
+          path: LuminAgent/artifacts/LuminAgent.dSYM

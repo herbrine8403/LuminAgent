@@ -1,0 +1,17 @@
+/* 由 CMake configure_file 生成，请勿手改。模板见 config.h.in。*/
+#ifndef LUMIN_CONFIG_H
+#define LUMIN_CONFIG_H
+
+/* 应用标识 */
+#define CONFIG_APP_NAME "LuminAgent"
+#define CONFIG_BUNDLE_ID "com.luminagent.ios"
+
+/* 构建信息（Makefile 经 -D 注入分支/commit） */
+#define CONFIG_BRANCH "@CONFIG_BRANCH@"
+#define CONFIG_COMMIT "@CONFIG_COMMIT@"
+#define CONFIG_RELEASE @CONFIG_RELEASE@
+
+/* 最低部署目标 */
+#define CONFIG_MIN_OS "15.0"
+
+#endif /* LUMIN_CONFIG_H */
