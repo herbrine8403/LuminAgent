@@ -7,6 +7,7 @@
 /* 会话（Session） */
 "session.title" = "会话";
 "session.empty" = "暂无会话";
+"session.new" = "新的会话";
 "session.create" = "新建会话";
 "session.filter" = "按模式筛选";
 "session.filter.all" = "全部";
@@ -24,6 +25,7 @@
 /* 聊天（Chat） */
 "chat.input.placeholder" = "输入消息…";
 "chat.send" = "发送";
+"chat.local.ack" = "已记录。连接模型后即可获得 AI 回复（当前版本需先配置 Provider）。";
 "chat.abort" = "中断 Stop";
 "chat.tool.call" = "工具调用 Tool Call";
 "chat.tool.result" = "工具结果 Tool Result";
@@ -73,3 +75,16 @@
 "error.unauthorized" = "授权失效（401），请重新登录";
 "error.permission.denied" = "权限被拒绝，操作已取消";
 "error.model.badidentifier" = "模型标识非法，需 provider/model 格式";
+
+/* 教程（Tutorial） */
+"tutorial.title" = "欢迎使用 LuminAgent";
+"tutorial.skip" = "跳过";
+"tutorial.start" = "开始体验";
+"tutorial.p1.title" = "新建会话，一点即聊";
+"tutorial.p1.desc" = "点右上角 + 或引导卡创建会话：Build 全工具执行，Plan 只读先行。";
+"tutorial.p2.title" = "连接模型，开箱即用";
+"tutorial.p2.desc" = "内置 Zen 免费模型，零配置即可对话；也支持自带 Key 与本地模型。";
+"tutorial.p3.title" = "Skills 与命令提效";
+"tutorial.p3.desc" = "按需加载 Skills，用 / 命令一键执行常用流程，@ 引用文件与子代理。";
+"tutorial.p4.title" = "权限先行，沙盒护航";
+"tutorial.p4.desc" = "危险操作先弹卡确认，文件读写限定沙盒，越界一律拦截。";

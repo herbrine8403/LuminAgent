@@ -116,6 +116,7 @@ add_executable(LuminAgent
   Natives/UI/LASessionListVC.m
   Natives/UI/LASettingsVC.m
   Natives/UI/LATrajectoryVC.m
+  Natives/UI/LATutorialVC.m
   Natives/UI/VMTileBaseCell.m
 )
 target_include_directories(LuminAgent PRIVATE

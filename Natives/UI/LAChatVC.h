@@ -32,6 +32,9 @@
 
 @property (nonatomic, weak) id<LAChatDelegate> delegate;
 
+/* 所属会话标识（由协调器在 push 前注入，用于落库与刷新） */
+@property (nonatomic, copy, nullable) NSString *sessionID;
+
 /* 消息流刷新（LAMessage 数组） */
 - (void)reloadWithMessages:(NSArray<LAMessage *> *)messages;
 
